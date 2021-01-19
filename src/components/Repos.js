@@ -4,7 +4,6 @@ import { GithubContext } from '../context/context';
 import { ExampleChart, Pie3D, Column3D, Bar3D, Doughnut2D } from './Charts';
 const Repos = () => {
   const { repos } = useContext(GithubContext);
-  console.log(repos);
 
   const languages = repos.reduce((total, item) => {
     const { language, stargazers_count } = item;
@@ -21,21 +20,6 @@ const Repos = () => {
     return total;
   }, {});
 
-  const chartData = [
-    {
-      label: 'HTML',
-      value: '13',
-    },
-    {
-      label: 'CSS',
-      value: '23',
-    },
-    {
-      label: 'Javascript',
-      value: '80',
-    },
-  ];
-
   const mostUsed = Object.values(languages)
     .sort((a, b) => b.value - a.value)
     .slice(0, 5);
@@ -47,14 +31,30 @@ const Repos = () => {
     })
     .slice(0, 5);
 
-  console.log(mostPopular);
+  // Stars and Forks
+
+  let { stars, forks } = repos.reduce(
+    (total, item) => {
+      const { name, stargazers_count, forks } = item;
+      total.stars[stargazers_count] = { label: name, value: stargazers_count };
+      total.forks[forks] = { label: name, value: forks };
+      return total;
+    },
+    {
+      stars: {},
+      forks: {},
+    }
+  );
+  stars = Object.values(stars).reverse().slice(0, 5);
+  forks = Object.values(forks).reverse().slice(0, 5);
+
   return (
     <section className='section'>
       <Wrapper className='section-center'>
         <Pie3D data={mostUsed} />
-        <Column3D data={chartData} />
+        <Column3D data={stars} />
         <Doughnut2D data={mostPopular}></Doughnut2D>
-        <div>hey</div>
+        <Bar3D data={forks}></Bar3D>
       </Wrapper>
     </section>
   );
