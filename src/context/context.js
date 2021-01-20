@@ -14,19 +14,29 @@ const GithubProvider = ({ children }) => {
   const [followers, setFollowers] = useState(mockFollowers);
   //request loading
   const [requests, setRequests] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState({ show: false, msg: '' });
 
   const searchUser = async (user) => {
     toggleError();
+    setLoading(true);
     const response = await axios(`${rootUrl}/users/${user}`).catch((err) => {
       console.log(err);
     });
     if (response) {
       setGithubUser(response.data);
+      const { login, followers_url } = response.data;
+      axios(`${rootUrl}/users/${login}/repos?per_page=100`).then(({ data }) => {
+        setRepos(data);
+      });
+      axios(`${followers_url}?per_page=100`).then(({ data }) => {
+        setFollowers(data);
+      });
     } else {
       toggleError(true, 'User does not exist');
     }
+    getRequest();
+    setLoading(false);
   };
 
   // Check rate requests from API
@@ -53,7 +63,15 @@ const GithubProvider = ({ children }) => {
 
   return (
     <GithubContext.Provider
-      value={{ githubUser, repos, followers, requests, error, searchUser }}
+      value={{
+        githubUser,
+        repos,
+        followers,
+        requests,
+        error,
+        searchUser,
+        isLoading,
+      }}
     >
       {children}
     </GithubContext.Provider>
