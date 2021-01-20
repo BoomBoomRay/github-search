@@ -17,6 +17,18 @@ const GithubProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState({ show: false, msg: '' });
 
+  const searchUser = async (user) => {
+    toggleError();
+    const response = await axios(`${rootUrl}/users/${user}`).catch((err) => {
+      console.log(err);
+    });
+    if (response) {
+      setGithubUser(response.data);
+    } else {
+      toggleError(true, 'User does not exist');
+    }
+  };
+
   // Check rate requests from API
   const getRequest = () => {
     axios(`${rootUrl}/rate_limit`)
@@ -41,7 +53,7 @@ const GithubProvider = ({ children }) => {
 
   return (
     <GithubContext.Provider
-      value={{ githubUser, repos, followers, requests, error }}
+      value={{ githubUser, repos, followers, requests, error, searchUser }}
     >
       {children}
     </GithubContext.Provider>
