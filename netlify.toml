@@ -3,5 +3,5 @@
   publish = "build"
 
 [context.production.environment]
-  REACT_APP_CLIENT_DOMAIN=dev-1j9jnwiz.us.auth0.com
-  REACT_APP_CLIENT_ID=Yzc1XZpjhyWT2yyfVz1QSAXbseLAk8cX
+  REACT_APP_CLIENT_DOMAIN="dev-1j9jnwiz.us.auth0.com"
+  REACT_APP_CLIENT_ID="Yzc1XZpjhyWT2yyfVz1QSAXbseLAk8cX"
