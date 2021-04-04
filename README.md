@@ -1,4 +1,4 @@
-# Github Search:
+# Github Search
 A simple application that allows users to search for users from the github API.
 
 # 1. Install packages
